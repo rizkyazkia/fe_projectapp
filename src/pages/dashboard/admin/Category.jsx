@@ -43,6 +43,7 @@ const Category = () => {
         data={data}
         isLoading={isLoading}
         page={page}
+        setPage={setPage}
         pages={pages}
         rows={rows}
         query={query}

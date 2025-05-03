@@ -14,7 +14,8 @@ import { HSOverlay } from "preline/preline";
 export const useAuth = () => {
   const navigate = useNavigate();
 
-  const { user, accessToken, refreshToken } = useContext(AuthContext);
+  const { user, setUser, accessToken, setAccessToken, refreshToken } =
+    useContext(AuthContext);
 
   const login = async (data) => {
     const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -152,7 +153,9 @@ export const useAuth = () => {
     register,
     registerInstitution,
     user,
+    setUser,
     accessToken,
+    setAccessToken,
     refreshToken,
   };
 };

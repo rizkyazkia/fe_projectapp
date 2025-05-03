@@ -26,7 +26,7 @@ const AuthProvider = ({ children }) => {
 
   const value = useMemo(
     () => ({ user, setUser, accessToken, setAccessToken, refreshToken }),
-    [user, accessToken, refreshToken]
+    [user, setUser, accessToken, setAccessToken, refreshToken]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

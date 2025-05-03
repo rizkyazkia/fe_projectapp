@@ -84,27 +84,44 @@ const Header = () => {
             </button>
 
             {/* Dropdown */}
-            <div className="hs-dropdown [--placement:bottom-right] relative inline-flex">
+            <div className="hs-dropdown relative inline-flex">
               <button
-                id="hs-dropdown-account"
+                id="hs-dropdown-custom-trigger"
                 type="button"
-                className="size-9.5 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-full border border-transparent text-gray-800 focus:outline-hidden disabled:opacity-50 disabled:pointer-events-none"
+                className="hs-dropdown-toggle py-1 ps-1 pe-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-full border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
                 aria-haspopup="menu"
                 aria-expanded="false"
                 aria-label="Dropdown"
               >
                 <img
-                  className="shrink-0 size-9.5 rounded-full"
-                  src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=320&h=320&q=80"
+                  className="w-8 h-auto rounded-full"
+                  src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80"
                   alt="Avatar"
                 />
+                <span className="text-gray-600 font-medium truncate max-w-30">
+                  {user?.username}
+                </span>
+                <svg
+                  className="hs-dropdown-open:rotate-180 size-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
               </button>
 
               <div
-                className="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white shadow-md rounded-lg mt-2 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full"
+                className="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white shadow-md rounded-lg mt-2"
                 role="menu"
                 aria-orientation="vertical"
-                aria-labelledby="hs-dropdown-account"
+                aria-labelledby="hs-dropdown-custom-trigger"
               >
                 <div className="py-3 px-5 bg-gray-100 rounded-t-lg">
                   <p className="text-sm text-gray-500">Masuk sebagai</p>

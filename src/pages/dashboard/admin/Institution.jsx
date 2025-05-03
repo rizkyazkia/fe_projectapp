@@ -45,6 +45,7 @@ const Institution = () => {
         rows={rows}
         pages={pages}
         page={page}
+        setPage={setPage}
         query={query}
         setQuery={setQuery}
         searchData={searchData}

@@ -3,6 +3,7 @@ import {
   MdOutlineFamilyRestroom,
   MdCategory,
   MdQuestionAnswer,
+  MdAccountCircle,
 } from "react-icons/md";
 import { TbLayoutDashboardFilled } from "react-icons/tb";
 import { RiUserSettingsFill, RiChatHistoryFill } from "react-icons/ri";
@@ -129,6 +130,12 @@ const SidebarItemHealthCare = [
     name: "Riwayat Penanganan",
     icon: <RiChatHistoryFill className="w-4 h-4" />,
     path: "/healthcare/treatment-history",
+  },
+  {
+    id: 5,
+    name: "Manajemen Staff",
+    icon: <MdAccountCircle className="w-4 h-4" />,
+    path: "/healthcare/staff-management",
   },
 ];
 

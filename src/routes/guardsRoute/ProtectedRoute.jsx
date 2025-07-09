@@ -48,6 +48,9 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
       case "healthcare":
         redirectPath = "/healthcare";
         break;
+      case "staff":
+        redirectPath = "/healthcare";
+        break;
       default:
         redirectPath = "/auth/login";
     }

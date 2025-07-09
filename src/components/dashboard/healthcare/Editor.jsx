@@ -10,7 +10,7 @@ import { useAuth } from "../../../hooks/auth/useAuth";
 import { token } from "../../../lib/auth/authAPI";
 import { createInternvetion } from "../../../lib/recommendationAPI";
 import { Signature } from "./Signature";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const MenuBar = () => {
   const { editor } = useCurrentEditor();

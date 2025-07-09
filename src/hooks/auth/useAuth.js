@@ -48,7 +48,7 @@ export const useAuth = () => {
                   navigate("/school");
                 } else if (userRole === "parent") {
                   navigate("/parent");
-                } else if (userRole === "healthcare") {
+                } else if (userRole === "healthcare" || userRole === "staff") {
                   navigate("/healthcare");
                 } else {
                   navigate("/landing-page");

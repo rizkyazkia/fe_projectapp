@@ -116,9 +116,10 @@ export default function Index({
   values,
   content,
   signature,
-  institution: { institution, username },
+  institution = null,
 }) {
-  if (!values) return null;
+  if (!values && !institution) return null;
+  const { institution: institut, username } = institution;
   const { user, accessToken } = useAuth();
 
   const fetchUserById = async (id) => {
@@ -161,8 +162,6 @@ export default function Index({
     return "-";
   };
 
-  console.log(JSON.stringify(institution));
-
   return (
     <PDFViewer width="100%" height={640}>
       <Document>
@@ -181,38 +180,26 @@ export default function Index({
             <Text style={styles.copTextTitle}>Dinas Kesehatan</Text>
             <Text style={styles.copTextSubTitle}>
               UPT{" "}
-              {institution
-                ? institution.name
-                : currentUser?.institution?.name ?? "-"}
+              {institut ? institut.name : currentUser?.institution?.name ?? "-"}
             </Text>
             <Text style={styles.copTextSubTitle}>
-              {institution
-                ? institution.address
+              {institut
+                ? institut.address
                 : currentUser?.institution?.address ?? "-"}
             </Text>
             <Text style={styles.copTextContent}>
-              {institution
-                ? institution.phone
+              {institut
+                ? institut.phone
                 : currentUser?.institution?.phone ?? "-"}
               |{" "}
-              {institution
-                ? institution.email
+              {institut
+                ? institut.email
                 : currentUser?.institution?.email ?? "-"}
             </Text>
             <Text style={styles.copBorderBottom}></Text>
           </View>
           <View style={styles.header}>
             <Text style={styles.headerText}>SURAT REKOMENDASI</Text>
-            {/* <Text style={styles.headerText}>
-              No:{" "}
-              {generateNoSurat({
-                nomorUrut,
-                kodeSekolah: getKodeSekolah(
-                  recommendation?.student?.institution?.name
-                ),
-                tanggal: recommendation.createdAt,
-              })}
-            </Text> */}
           </View>
           <View style={styles.information}>
             <Text style={styles.informationTextTitle}>
@@ -285,7 +272,7 @@ export default function Index({
               {signature && <Image src={signature} style={styles.image} />}
             </View>
             <Text style={styles.signatureName}>
-              {institution ? username : currentUser?.username ?? "-"}
+              {institut ? username : currentUser?.username ?? "-"}
             </Text>
           </View>
         </Page>

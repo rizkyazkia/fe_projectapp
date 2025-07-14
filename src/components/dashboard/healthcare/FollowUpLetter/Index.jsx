@@ -119,7 +119,12 @@ export default function Index({
   institution = null,
 }) {
   if (!values && !institution) return null;
-  const { institution: institut, username } = institution;
+  let institut = null;
+  let username = "-";
+  if (institution) {
+    institut = institution?.institution;
+    username = institution?.username;
+  }
   const { user, accessToken } = useAuth();
 
   const fetchUserById = async (id) => {

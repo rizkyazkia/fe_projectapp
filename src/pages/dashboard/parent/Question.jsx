@@ -323,20 +323,22 @@ const Question = () => {
     <>
       <div className="flex flex-col space-y-5">{content}</div>
       <div>
-        {quesioner?.map((qst) => {
-          return (
-            <div key={qst.id}>
-              <h1 className="mt-10 mb-5 font-semibold">
-                Riwayat Jawaban {qst.title}
-              </h1>
-              {qst.Response.map((r, i) => {
-                return (
-                  <div className="flex flex-col">
-                    <div className="-m-1.5 overflow-x-auto">
-                      <div className="p-1.5 min-w-full inline-block align-middle">
-                        <div className="border border-gray-200 rounded-lg divide-y divide-gray-200">
-                          <div className="py-3 px-4">
-                            {/* <form
+        {quesioner.length > 0 &&
+          quesioner?.map((qst) => {
+            return (
+              <div key={qst.id}>
+                <h1 className="mt-10 mb-5 font-semibold">
+                  Riwayat Jawaban {qst.title}
+                </h1>
+                {qst.Response.length > 0 ? (
+                  qst.Response.map((r, i) => {
+                    return (
+                      <div className="flex flex-col">
+                        <div className="-m-1.5 overflow-x-auto">
+                          <div className="p-1.5 min-w-full inline-block align-middle">
+                            <div className="border border-gray-200 rounded-lg divide-y divide-gray-200">
+                              <div className="py-3 px-4">
+                                {/* <form
                               onSubmit={searchData}
                               className="relative max-w-xs w-full"
                             >
@@ -376,73 +378,76 @@ const Question = () => {
                                 Cari
                               </button>
                             </form> */}
-                          </div>
-                          <div className="overflow-hidden">
-                            <table className="min-w-full divide-y divide-gray-200">
-                              <thead className="bg-gray-50">
-                                <tr>
-                                  {TABLE_HEAD.map((head) => (
-                                    <th
-                                      key={head}
-                                      scope="col"
-                                      className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
-                                    >
-                                      {head}
-                                    </th>
-                                  ))}
-                                </tr>
-                              </thead>
-                              <tbody className="divide-y divide-gray-200">
-                                {qst.questions.map((q, i) => {
-                                  const answer = r.answers.find(
-                                    (ans) => ans.questionId === q.id
-                                  );
-
-                                  return (
-                                    <tr key={q.id}>
-                                      <td className="px-6 py-4 capitalize whitespace-nowrap text-sm font-medium text-gray-800">
-                                        {i + 1}
-                                      </td>
-                                      <td className="px-6 py-4 capitalize whitespace-pre-wrap text-sm font-medium text-gray-800">
-                                        {q?.title}
-                                      </td>
-                                      <td className="px-6 py-4 capitalize whitespace-nowrap text-sm font-medium text-gray-800">
-                                        {q.type === "SCALE"
-                                          ? answer?.scaleValue ?? "-"
-                                          : answer?.text_value ?? "-"}
-                                      </td>
-                                      <td className="px-6 py-4 capitalize whitespace-nowrap text-sm font-medium text-gray-800 text-center">
-                                        {answer ? answer.score : "-"}
-                                      </td>
-                                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <button
-                                          type="button"
-                                          className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 focus:outline-hidden focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none"
-                                          aria-controls={`hs-edit-response-modal-${answer.id}`}
-                                          data-hs-overlay={`#hs-edit-response-modal-${answer.id}`}
+                              </div>
+                              <div className="overflow-hidden">
+                                <table className="min-w-full divide-y divide-gray-200">
+                                  <thead className="bg-gray-50">
+                                    <tr>
+                                      {TABLE_HEAD.map((head) => (
+                                        <th
+                                          key={head}
+                                          scope="col"
+                                          className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
                                         >
-                                          Edit
-                                        </button>
-                                        <FormEditResponse
-                                          answer={answer}
-                                          question={q}
-                                        />
-                                      </td>
+                                          {head}
+                                        </th>
+                                      ))}
                                     </tr>
-                                  );
-                                })}
-                              </tbody>
-                            </table>
+                                  </thead>
+                                  <tbody className="divide-y divide-gray-200">
+                                    {qst.questions.map((q, i) => {
+                                      const answer = r.answers.find(
+                                        (ans) => ans.questionId === q.id
+                                      );
+
+                                      return (
+                                        <tr key={q.id}>
+                                          <td className="px-6 py-4 capitalize whitespace-nowrap text-sm font-medium text-gray-800">
+                                            {i + 1}
+                                          </td>
+                                          <td className="px-6 py-4 capitalize whitespace-pre-wrap text-sm font-medium text-gray-800">
+                                            {q?.title}
+                                          </td>
+                                          <td className="px-6 py-4 capitalize whitespace-nowrap text-sm font-medium text-gray-800">
+                                            {q.type === "SCALE"
+                                              ? answer?.scaleValue ?? "-"
+                                              : answer?.text_value ?? "-"}
+                                          </td>
+                                          <td className="px-6 py-4 capitalize whitespace-nowrap text-sm font-medium text-gray-800 text-center">
+                                            {answer ? answer.score : "-"}
+                                          </td>
+                                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <button
+                                              type="button"
+                                              className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 focus:outline-hidden focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none"
+                                              aria-controls={`hs-edit-response-modal-${answer.id}`}
+                                              data-hs-overlay={`#hs-edit-response-modal-${answer.id}`}
+                                            >
+                                              Edit
+                                            </button>
+                                            <FormEditResponse
+                                              answer={answer}
+                                              question={q}
+                                            />
+                                          </td>
+                                        </tr>
+                                      );
+                                    })}
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })}
+                    );
+                  })
+                ) : (
+                  <h1>Tidak ada jawaban</h1>
+                )}
+              </div>
+            );
+          })}
       </div>
     </>
   );

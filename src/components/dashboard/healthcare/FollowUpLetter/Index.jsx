@@ -277,7 +277,8 @@ export default function Index({
               {signature && <Image src={signature} style={styles.image} />}
             </View>
             <Text style={styles.signatureName}>
-              {institution?.username ??
+              {institution?.staff?.fullName ??
+                institution?.username ??
                 currentUser?.staff?.fullName ??
                 currentUser?.username ??
                 "-"}

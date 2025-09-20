@@ -55,6 +55,8 @@ const InterventionTable = ({ forWho }) => {
     mutate,
   } = useSWR("institutionInterventions", () => fetchIntervention());
 
+  console.log({ interventionData });
+
   useEffect(() => {
     if (!isLoading) {
       HSStaticMethods.autoInit();

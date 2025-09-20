@@ -155,6 +155,33 @@ const SidebarItemHealthCare = [
   },
 ];
 
+const SidebarItemStaff = [
+  {
+    id: 1,
+    name: "Dashboard",
+    icon: <TbLayoutDashboardFilled className="w-4 h-4" />,
+    path: "/healthcare/dashboard",
+  },
+  {
+    id: 2,
+    name: "Daftar Rekomendasi",
+    icon: <IoBook className="w-4 h-4" />,
+    path: "/healthcare/list-of-recommendations",
+  },
+  {
+    id: 3,
+    name: "Tindak Lanjut",
+    icon: <IoIosMedkit className="w-4 h-4" />,
+    path: "/healthcare/follow-up",
+  },
+  {
+    id: 4,
+    name: "Riwayat Penanganan",
+    icon: <RiChatHistoryFill className="w-4 h-4" />,
+    path: "/healthcare/treatment-history",
+  },
+];
+
 const Sidebar = ({ role = "" }) => {
   const location = useLocation();
   console.log({ role });
@@ -171,7 +198,8 @@ const Sidebar = ({ role = "" }) => {
       sidebarItems = SidebarItemParent;
       break;
     case location.pathname.startsWith("/healthcare"):
-      sidebarItems = SidebarItemHealthCare;
+      sidebarItems =
+        role === "healthcare" ? SidebarItemHealthCare : SidebarItemStaff;
       break;
     default:
       sidebarItems = [];

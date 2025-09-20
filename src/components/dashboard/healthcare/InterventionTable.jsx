@@ -82,7 +82,6 @@ const InterventionTable = ({ forWho }) => {
         ? JSON.parse(intervention.options)
         : "";
       const content = parsedContent.content;
-      console.log({ intervention });
 
       return (
         <tr key={intervention.id}>
@@ -94,8 +93,7 @@ const InterventionTable = ({ forWho }) => {
               "-"}
           </td>
           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-            {intervention?.recommendation?.submittedBy?.institution?.name ||
-              "-"}
+            {intervention?.recommendation?.student?.institution?.name || "-"}
           </td>
           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
             {intervention?.recommendation?.student?.class?.name ?? "-"}

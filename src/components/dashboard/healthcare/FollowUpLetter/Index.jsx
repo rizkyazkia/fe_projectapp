@@ -120,7 +120,8 @@ export default function Index({
 }) {
   if (!values && !institution) return null;
   let institut = null;
-  let username = "-";
+  let username = "";
+
   if (institution) {
     institut = institution?.institution;
     username = institution?.username;
@@ -129,7 +130,6 @@ export default function Index({
 
   const fetchUserById = async (id) => {
     const user = await getUserById(id, accessToken);
-    console.log({ user });
 
     return user.data;
   };
@@ -166,6 +166,7 @@ export default function Index({
     if (gender === "P") return "Perempuan";
     return "-";
   };
+  console.log({ currentUser, institution, institut, username });
 
   return (
     <PDFViewer width="100%" height={640}>
@@ -184,8 +185,7 @@ export default function Index({
           <View style={styles.cop}>
             <Text style={styles.copTextTitle}>Dinas Kesehatan</Text>
             <Text style={styles.copTextSubTitle}>
-              UPT{" "}
-              {institut ? institut.name : currentUser?.institution?.name ?? "-"}
+              UPT {institut?.name ?? currentUser?.institution?.name ?? "-"}
             </Text>
             <Text style={styles.copTextSubTitle}>
               {institut
@@ -277,7 +277,11 @@ export default function Index({
               {signature && <Image src={signature} style={styles.image} />}
             </View>
             <Text style={styles.signatureName}>
-              {institut ? username : currentUser?.username ?? "-"}
+              {institution?.staff?.fullName ??
+                institution?.username ??
+                currentUser?.staff?.fullName ??
+                currentUser?.username ??
+                "-"}
             </Text>
           </View>
         </Page>

@@ -6,6 +6,7 @@ import { getRecommendations } from "../../../lib/recommendationAPI";
 import Surat from "./DetailLetter/Index";
 import { getParentFamilyMember } from "../../../lib/parent/familiesAPI";
 import { useRecommendation } from "../../../hooks/useRecommendation";
+import { useAuth } from "../../../hooks/auth/useAuth";
 
 const TABLE_HEAD = [
   "Nama Lengkap",
@@ -25,11 +26,12 @@ const TableRecommendation = () => {
   const [keyword, setKeyword] = React.useState("");
   const [query, setQuery] = React.useState("");
   const [selectedRec, setSelectedRec] = React.useState(null);
+  const { accessToken } = useAuth();
 
   let tableContent;
 
   const Fetchrecomend = async () => {
-    const response = await getRecommendations(keyword, page, limit);
+    const response = await getRecommendations(accessToken);
     setPage(response.data.page);
     setPages(response.data.totalPage);
     setRows(response.data.totalRows);
@@ -77,8 +79,6 @@ const TableRecommendation = () => {
   React.useEffect(() => {
     recommendationMutate();
   }, [keyword, page, recommendationMutate]);
-
-  console.log(selectedRec);
 
   if (recommendationLoading) {
     tableContent = [...Array(10)].map((_, index) => (

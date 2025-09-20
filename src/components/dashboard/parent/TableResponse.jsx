@@ -17,8 +17,10 @@ const TableResponse = ({
   content,
 }) => {
   let tableContent;
+  console.log({ data });
 
   const dynamicData = data?.[dataKey] || [];
+  console.log({ dynamicData });
 
   if (isLoading) {
     tableContent = [...Array(10)].map((_, index) => (

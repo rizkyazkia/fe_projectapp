@@ -1,20 +1,16 @@
-import React from "react";
-import FormAddDouble from "../../../components/FormAddDouble";
-import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
-import { HSStaticMethods, HSOverlay } from "preline/preline";
 import { useFormik } from "formik";
-import useSWR from "swr";
-import { getClasses } from "../../../lib/classesAPI";
-import { useTeachers } from "../../../hooks/useTeachers";
+import { HSOverlay, HSStaticMethods } from "preline/preline";
+import React from "react";
+import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
+import { toast } from "react-toastify";
+import FormAddDouble from "../../../components/FormAddDouble";
 import { useAuth } from "../../../hooks/auth/useAuth";
-import FormEditStaff from "./FormEditStaff";
 import {
   createStaff,
   deleteStaff,
   getStaffs,
-  updateStaff,
 } from "../../../lib/admin/healthcare/staffApi";
-import { toast } from "react-toastify";
+import FormEditStaff from "./FormEditStaff";
 import StaffTable from "./StaffTable";
 
 const StaffManagement = () => {
@@ -22,19 +18,11 @@ const StaffManagement = () => {
     HSStaticMethods.autoInit();
   }, []);
 
-  const { deleteTeacher } = useTeachers();
   const { accessToken } = useAuth();
 
   const [showPassword, setShowPassword] = React.useState(false);
   const [staffsData, setStaffsData] = React.useState(null);
   const [selectedStaff, setSelectedStaff] = React.useState(null);
-
-  const classes = async () => {
-    const response = await getClasses();
-    return response.data;
-  };
-
-  const { data } = useSWR("classes", classes);
 
   const getAllStaffHandler = async () => {
     const data = await getStaffs(accessToken);
@@ -81,12 +69,6 @@ const StaffManagement = () => {
       await addStaffHandler(values, accessToken);
     },
   });
-
-  if (!data) {
-    return (
-      <div className="max-w-lg w-full bg-gray-300 animate-pulse h-[44px]"></div>
-    );
-  }
 
   const handleEdit = async (id) => {
     const selectedStaff = staffsData?.find((item) => item.id === id);

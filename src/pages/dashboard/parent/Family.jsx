@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import { FaChild, FaChildDress, FaChildReaching } from "react-icons/fa6";
 import { getJobTypes } from "../../../lib/jobAPI";
 import useSWR from "swr";
@@ -14,6 +14,7 @@ import { token } from "../../../lib/auth/authAPI";
 import api from "../../../lib/api";
 import TableFamilyMember from "../../../components/dashboard/parent/TableFamilyMember";
 import { jwtDecode } from "jwt-decode";
+import { getAllClass } from "../../../lib/classesAPI";
 
 const Family = () => {
   const { accessToken, setAccessToken, user, setUser } = useAuth();
@@ -155,12 +156,18 @@ const Family = () => {
     }
   };
 
-  const { values, handleChange, handleBlur, setFieldValue, handleSubmit } =
-    useFormik({
-      initialValues: getInitialValues(currentIndex),
-      onSubmit,
-      enableReinitialize: true,
-    });
+  const {
+    values,
+    handleChange,
+    handleBlur,
+    setFieldValue,
+    handleSubmit,
+    getFieldProps,
+  } = useFormik({
+    initialValues: getInitialValues(currentIndex),
+    onSubmit,
+    enableReinitialize: true,
+  });
 
   React.useEffect(() => {
     const type = getTypeByIndex(currentIndex);
@@ -191,7 +198,15 @@ const Family = () => {
   };
 
   const classes = async () => {
-    const response = await api.get(import.meta.env.VITE_API_GET_CLASSES);
+    const schoolId = getFieldProps("schoolId").value;
+    console.log({ schoolId });
+
+    if (schoolId === 0) {
+      return;
+    }
+    const response = await api.get(
+      `${import.meta.env.VITE_BASE_URL}schools/${schoolId}`
+    );
     return response.data?.data;
   };
 
@@ -202,8 +217,10 @@ const Family = () => {
 
   const { data: jobData } = useSWR("jobtypes", jobtype);
   const { data: institutionData } = useSWR("institutions", institutions);
-  const { data: classData } = useSWR("classes", classes);
+  // const { data: classData } = useSWR("classes", classes);
   const { data: familyMembersData } = useSWR("familyMembers", familyMembers);
+
+  const [classData, setClassData] = useState([]);
 
   React.useEffect(() => {
     // Hanya jalankan jika familyMembersData sudah ada dan stepper belum complete
@@ -590,6 +607,37 @@ const Family = () => {
       HSStaticMethods.autoInit();
     }, 100);
   }, [values.status, values.sameHome, currentIndex, statusSelectRef]);
+
+  const schoolId = +getFieldProps("schoolId").value;
+  React.useEffect(() => {
+    console.log({ schoolId });
+
+    const fetchClasses = async () => {
+      try {
+        const { data } = await getAllClass(schoolId);
+        setClassData(data.classes);
+      } catch (err) {
+        setClassData([]);
+        console.log({ err });
+      }
+    };
+
+    if (schoolId !== 0) {
+      fetchClasses();
+    } else {
+      setClassData([]);
+    }
+  }, [schoolId]);
+
+  React.useEffect(() => {
+    const instance = HSSelect.getInstance("#classId");
+    if (instance) {
+      instance.destroy();
+    }
+    setTimeout(() => {
+      HSStaticMethods.autoInit();
+    }, 100);
+  }, [classData]);
 
   const handleSameAddress = (e) => {
     const checked = e.target.checked;
@@ -1643,7 +1691,7 @@ const Family = () => {
               style={{ display: "none" }}
             >
               <form onSubmit={handleSubmit}>
-                {!institutionData || !classData ? (
+                {!institutionData ? (
                   <div>Loading...</div>
                 ) : (
                   <div className="grid grid-cols-2 gap-x-5">
@@ -1960,7 +2008,7 @@ const Family = () => {
                                   ))}
                             </select>
                           </div>
-                          <div className="max-w-lg w-full">
+                          <div className="max-w-lg w-full" id="test">
                             <label
                               htmlFor="classId"
                               className="block text-sm font-medium mb-2"
@@ -1991,9 +2039,8 @@ const Family = () => {
                               className="hidden"
                             >
                               <option value="">Pilih Kelas</option>
-                              {classData &&
-                                classData?.classes?.length > 0 &&
-                                classData?.classes?.map((item) => (
+                              {classData.length > 0 &&
+                                classData.map((item) => (
                                   <option key={item.id} value={item.id}>
                                     {item.name}
                                   </option>

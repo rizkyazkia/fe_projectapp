@@ -6,6 +6,7 @@ import ClassesPage from "../../pages/dashboard/school/Classes";
 import Question from "../../pages/dashboard/school/Question";
 import Students from "../../pages/dashboard/school/Students";
 import ProtectedRoute from "../guardsRoute/ProtectedRoute";
+import { useAuth } from "../../hooks/auth/useAuth";
 
 const schoolRoute = () => {
   return (

@@ -1,8 +1,11 @@
 import api from "../api";
 
-export const getTeachers = async (keyword, page, limit) => {
+export const getTeachers = async (keyword, page, limit, token) => {
   try {
     const response = await api.get(import.meta.env.VITE_API_GET_TEACHERS, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
       params: {
         search: keyword,
         page,

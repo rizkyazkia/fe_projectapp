@@ -1,13 +1,23 @@
 import axios from "axios";
 import api from "./api";
 
-export const getRecommendations = async () => {
+export const getRecommendations = async (token) => {
+  console.log({ token });
   try {
+    if (!token) {
+      return;
+    }
     const response = await api.get(
-      `${import.meta.env.VITE_API_GET_RECOMMENDATIONS}`
+      `${import.meta.env.VITE_API_GET_RECOMMENDATIONS}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
     );
     return response.data;
   } catch (error) {
+    console.log({ error });
     throw error.response?.data;
   }
 };

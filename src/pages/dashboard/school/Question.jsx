@@ -1,22 +1,22 @@
-import React from "react";
-import {
-  getQuesioners,
-  getQuestionsByQuesionerIDWithoutPagination,
-} from "../../../lib/quesionersAPI";
-import useSWR from "swr";
-import { IoPlay } from "react-icons/io5";
-import { HSOverlay, HSStaticMethods } from "preline/preline";
 import { useFormik } from "formik";
-import { useResponses } from "../../../hooks/parent/useResponses";
-import { useAuth } from "../../../hooks/auth/useAuth";
-import { token } from "../../../lib/auth/authAPI";
 import { jwtDecode } from "jwt-decode";
+import { HSOverlay, HSStaticMethods } from "preline/preline";
+import React from "react";
+import { IoPlay } from "react-icons/io5";
+import useSWR from "swr";
+import FormEditResponse from "../../../components/dashboard/parent/FormEditResponse";
+import TableResponse from "../../../components/dashboard/parent/TableResponse";
+import { useAuth } from "../../../hooks/auth/useAuth";
+import { useResponses } from "../../../hooks/parent/useResponses";
+import { token } from "../../../lib/auth/authAPI";
 import {
   checkingAnsweredQuesionerInstitution,
   getResponseQuesionerInstitution,
 } from "../../../lib/parent/responseAPI";
-import TableResponse from "../../../components/dashboard/parent/TableResponse";
-import FormEditResponse from "../../../components/dashboard/parent/FormEditResponse";
+import {
+  getQuesioners,
+  getQuestionsByQuesionerIDWithoutPagination,
+} from "../../../lib/quesionersAPI";
 
 const TABLE_HEAD = ["No", "Pertanyaan", "Jawaban", "Skor", "Aksi"];
 

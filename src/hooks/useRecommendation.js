@@ -9,22 +9,45 @@ export const useRecommendation = (mutate) => {
     const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
     const handleLoading = delay(1000);
-    toast.promise(
-      handleLoading.then(() => createRecommendation(data, token)),
-      {
-        pending: "Loading...",
-        success: {
-          render(response) {
-            return response.data.message;
-          },
+    // toast.promise(
+
+    //   handleLoading.then(() => createRecommendation(data, token)),
+    //   {
+    //     pending: "Loading...",
+    //     success: {
+    //       render(response) {
+    //         setTimeout(() => {
+    //           window.location.reload();
+    //         }, 300);
+    //         return response.data.message;
+    //       },
+    //     },
+    //     error: {
+    //       render(response) {
+    //         return response.data.message;
+    //       },
+    //     },
+    //     onSuccess: () => window.location.reload(),
+    //   }
+    // );
+    try {
+      const res = await createRecommendation(
+        {
+          ...data,
+          healthCareId: data.selectedHealthCare,
         },
-        error: {
-          render(response) {
-            return response.data.message;
-          },
+        token
+      );
+
+      toast.success("Rekomendasi berhasil dibuat", {
+        onClose: () => {
+          window.location.reload();
         },
-      }
-    );
+      });
+    } catch (err) {
+      console.log({ err });
+      toast.error(`Gagal membuat rekomendasi: ${err.message}`);
+    }
   };
 
   const changeStatusToProcessedRecommendation = async (id) => {

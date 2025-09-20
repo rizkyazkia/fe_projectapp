@@ -22,6 +22,9 @@ export const getStudentsByInstitution = async (
   limit,
   filteredClass = ""
 ) => {
+  if (!token) {
+    return;
+  }
   try {
     const response = await api.get(
       import.meta.env.VITE_API_GET_STUDENTS_BY_INSTITUTION,
@@ -30,15 +33,20 @@ export const getStudentsByInstitution = async (
           Authorization: `Bearer ${token}`,
         },
         params: {
-          search: keyword,
+          ...(keyword && {
+            search: keyword,
+          }),
           page,
           limit,
-          class: filteredClass,
+          ...(filteredClass && {
+            class: filteredClass,
+          }),
         },
       }
     );
     return response.data;
   } catch (error) {
+    console.log({ error });
     throw error.response?.data;
   }
 };

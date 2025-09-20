@@ -1,15 +1,17 @@
 import { toast } from "react-toastify";
 import { HSOverlay } from "preline/preline";
 import { createClasses, dropClasses, putClasses } from "../lib/classesAPI";
+import { useAuth } from "./auth/useAuth";
 
 export const useClasses = () => {
+  const { accessToken } = useAuth();
   const addClass = async (data) => {
     const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
     const handleLoading = delay(1000);
 
     toast.promise(
-      handleLoading.then(() => createClasses(data)),
+      handleLoading.then(() => createClasses(data, accessToken)),
       {
         pending: "Loading...",
         success: {

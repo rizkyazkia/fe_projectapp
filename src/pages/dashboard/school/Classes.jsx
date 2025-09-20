@@ -39,6 +39,7 @@ const Classes = () => {
     HSOverlay.open("#modal-edit-classes");
     setSelectedId(id);
   };
+  console.log({ values });
 
   return (
     <div>

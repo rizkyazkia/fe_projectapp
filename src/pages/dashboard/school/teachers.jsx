@@ -23,7 +23,7 @@ const Teachers = () => {
   const [selectedTeacher, setSelectedTeacher] = React.useState(null);
 
   const classes = async () => {
-    const response = await getClasses();
+    const response = await getClasses(accessToken);
     return response.data;
   };
 

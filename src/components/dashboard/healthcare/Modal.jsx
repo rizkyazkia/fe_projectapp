@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from "react";
-import Intervensi from "../../../components/dashboard/healthcare/FollowUpLetter/Index";
 import { useCurrentEditor } from "@tiptap/react";
-import { getSingleRecommendation } from "../../../lib/recommendationAPI";
+import Intervensi from "../../../components/dashboard/healthcare/FollowUpLetter/Index";
 
 export const Modal = ({ values, content, setContent, signature }) => {
   const { editor } = useCurrentEditor();

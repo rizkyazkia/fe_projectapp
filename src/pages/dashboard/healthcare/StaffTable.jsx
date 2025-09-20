@@ -87,9 +87,7 @@ const StaffTable = ({ children, handleDelete, handleEdit, setStaffsData }) => {
     tableContent = (
       <tr>
         <td colSpan={TABLE_HEAD.length} className="p-4 text-center">
-          <h1 className="text-gray-900 text-sm font-normal">
-            Tidak ada guru tersedia
-          </h1>
+          <h1 className="text-gray-900 text-sm font-normal">Tidak ada data</h1>
         </td>
       </tr>
     );

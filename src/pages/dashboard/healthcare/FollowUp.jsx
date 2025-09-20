@@ -22,6 +22,7 @@ import {
   getRecommendations,
   getSingleRecommendation,
 } from "../../../lib/recommendationAPI";
+import { useAuth } from "../../../hooks/auth/useAuth";
 
 const TABLE_HEAD = ["No", "Pertanyaan", "Jawaban"];
 
@@ -70,6 +71,8 @@ const FollowUp = () => {
     "quesionerSchool",
     quesionerSchool
   );
+
+  console.log({ quesionerParentData, values });
 
   React.useEffect(() => {
     if (quesionerParentData && values.student) {
@@ -145,9 +148,10 @@ const FollowUp = () => {
 
   const [selectedRecommendationData, setSelectedRecommendationData] =
     React.useState(null);
+  const { accessToken } = useAuth();
 
   const students = async () => {
-    const response = await getRecommendations();
+    const response = await getRecommendations(accessToken);
     const filteredData = {
       ...response.data,
       recomend: response.data.recomend.filter(
@@ -208,7 +212,7 @@ const FollowUp = () => {
       if (!select) {
         return;
       }
-      select.parentNode.insertBefore(newLabel, select);
+      // select.parentNode.insertBefore(newLabel, select);
       HSStaticMethods.autoInit();
     }, 100);
   }, [values.school]);
@@ -263,8 +267,6 @@ const FollowUp = () => {
     fetchRecommendationWithUserData,
     { onError: (err) => console.log({ err }) }
   );
-
-  console.log({ isLoading, error, recommendation });
 
   useEffect(() => {
     if (!selectedRecommendationData) {

@@ -3,6 +3,7 @@ import { getClasses } from "../../../lib/classesAPI";
 import useSWR from "swr";
 import Pagination from "../../Pagination";
 import { HSStaticMethods } from "preline/preline";
+import { useAuth } from "../../../hooks/auth/useAuth";
 
 const TABLE_HEAD = ["No", "Kelas", "Wali Kelas"];
 
@@ -17,9 +18,10 @@ const TableClasses = ({ children, handleDelete, handleEdit }) => {
   const [rows, setRows] = React.useState(0);
   const [keyword, setKeyword] = React.useState("");
   const [query, setQuery] = React.useState("");
+  const { accessToken } = useAuth();
 
   const classes = async () => {
-    const response = await getClasses(keyword, page, limit);
+    const response = await getClasses(accessToken, keyword, page, limit);
     setPage(response.data.page);
     setPages(response.data.totalPage);
     setRows(response.data.totalRows);

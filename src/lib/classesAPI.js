@@ -1,6 +1,9 @@
 import api from "./api";
 
-export const getClasses = async (keyword, page, limit) => {
+export const getClasses = async (token, keyword, page, limit) => {
+  if (!token) {
+    return;
+  }
   try {
     const response = await api.get(import.meta.env.VITE_API_GET_CLASSES, {
       params: {
@@ -8,16 +11,28 @@ export const getClasses = async (keyword, page, limit) => {
         page,
         limit,
       },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
     return response.data;
   } catch (error) {
+    console.log({ error });
     throw error.response?.data;
   }
 };
 
-export const createClasses = async (data) => {
+export const createClasses = async (data, token) => {
   try {
-    const response = await api.post(import.meta.env.VITE_API_ADD_CLASSES, data);
+    const response = await api.post(
+      import.meta.env.VITE_API_ADD_CLASSES,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     throw error.response?.data;
@@ -43,6 +58,18 @@ export const dropClasses = async (id) => {
     );
     return response.data;
   } catch (error) {
+    throw error.response?.data;
+  }
+};
+
+export const getAllClass = async (schoolId) => {
+  try {
+    const response = await api.get(
+      `${import.meta.env.VITE_BASE_URL}schools/${schoolId}/classes`
+    );
+    return response.data;
+  } catch (error) {
+    console.log({ error });
     throw error.response?.data;
   }
 };

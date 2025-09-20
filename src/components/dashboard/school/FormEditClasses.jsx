@@ -3,12 +3,14 @@ import { getClasses } from "../../../lib/classesAPI";
 import useSWR from "swr";
 import { useFormik } from "formik";
 import { useClasses } from "../../../hooks/useClasses";
+import { useAuth } from "../../../hooks/auth/useAuth";
 
 const FormEditClasses = ({ selectedId }) => {
   const { updateClass } = useClasses();
+  const {accessToken } = useAuth();
 
   const classes = async () => {
-    const response = await getClasses();
+    const response = await getClasses(accessToken);
     return response.data;
   };
 

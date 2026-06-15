@@ -12,7 +12,7 @@ export const getCities = async () => {
 export const getCitiesByProvince = async (provinceId) => {
   try {
     const response = await api.get(
-      `${import.meta.env.VITE_BASE_URL}provinces/${provinceId}/cities`
+      `${import.meta.env.VITE_BASE_URL}province/${provinceId}/cities`
     );
     return response.data;
   } catch (error) {
@@ -23,7 +23,7 @@ export const getCitiesByProvince = async (provinceId) => {
 export const addProvince = async (province, token) => {
   try {
     const response = await api.post(
-      `${import.meta.env.VITE_BASE_URL}provinces`,
+      `${import.meta.env.VITE_BASE_URL}province`,
       { name: province },
       {
         headers: {
@@ -40,7 +40,7 @@ export const addProvince = async (province, token) => {
 export const addCity = async (provinceId, newCity, token) => {
   try {
     const response = await api.post(
-      `${import.meta.env.VITE_BASE_URL}provinces/${provinceId}/cities`,
+      `${import.meta.env.VITE_BASE_URL}province/${provinceId}/cities`,
       { name: newCity },
       {
         headers: {

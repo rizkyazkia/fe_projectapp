@@ -6,7 +6,6 @@ import { useFormik } from "formik";
 import {
   addCity,
   addProvince,
-  getCities,
   getCitiesByProvince,
 } from "../../../lib/cityAPI";
 import { getProvinces } from "../../../lib/provinceAPI";
@@ -22,11 +21,6 @@ const Users = () => {
 
   const province = async () => {
     const response = await getProvinces();
-    return response.data;
-  };
-
-  const city = async () => {
-    const response = await getCities();
     return response.data;
   };
 
@@ -82,53 +76,48 @@ const Users = () => {
   });
 
   const institutionProvince = getFieldProps("institutionProvince");
-  console.log({ institutionProvince });
 
-  const { data: provinces } = useSWR("provinces", province);
-  const [cities, setCities] = useState([]);
+  const { data: provinces, mutate: mutateProvinces } = useSWR(
+    "provinces",
+    province,
+  );
+  const { data: cities, mutate: mutateCities } = useSWR(
+    institutionProvince.value > 0
+      ? `cities-${institutionProvince.value}`
+      : null,
+    async () => {
+      const res = await getCitiesByProvince(institutionProvince.value);
+      return res.data;
+    },
+    { fallbackData: [] },
+  );
   const { data: institutions } = useSWR("institutionType", institution);
   const [newProvince, setNewProvince] = useState("");
   const [newCity, setNewCity] = useState("");
   const { accessToken } = useAuth();
   const [selectedProvinceId, setSelectedProvinceId] = useState(null);
 
-  useEffect(() => {
-    const provinceId = Number(institutionProvince.value);
-
-    if (provinceId > 0) {
-      (async () => {
-        try {
-          const { data } = await getCitiesByProvince(provinceId);
-          setCities(data);
-        } catch (err) {
-          console.log({ err });
-          setCities([]);
-        }
-      })();
-    } else {
-      setCities([]);
-    }
-  }, [institutionProvince.value]); // <-- Dependensi yang benar
-
   const handleProvinceChange = (event) => {
     const provinceId = event.target.value;
     setFieldValue("institutionProvince", provinceId);
-    setFieldValue("institutionCity", 0); // Reset pilihan kota saat provinsi berubah
+    setFieldValue("institutionCity", 0);
   };
+
   const addNewProvince = async (newProvince) => {
     try {
       if (!newProvince) {
         throw new Error("Isi provinsi terlebih dahulu");
       }
       const capitalizeProvince = capitalizeText(newProvince);
-      const { data } = await addProvince(capitalizeProvince, accessToken);
-
+      if (provinces?.some((p) => p.name === capitalizeProvince)) {
+        toast.error("Provinsi sudah ada");
+        return;
+      }
+      await addProvince(capitalizeProvince, accessToken);
       setNewProvince("");
-      toast.success("Provinsi berhasil ditambahkan", {
-        onClose: () => {
-          window.location.reload();
-        },
-      });
+      setIsAddProvince(false);
+      await mutateProvinces();
+      toast.success("Provinsi berhasil ditambahkan");
     } catch (err) {
       console.log({ err });
       toast.error(`Gagal menambahkan provinsi: ${err.messsage}`);
@@ -150,42 +139,51 @@ const Users = () => {
         }
         const isExists = cities.some(
           (city) =>
-            city.name === capitalizeCity && city.province_id === provinceId
+            city.name === capitalizeCity && city.province_id === provinceId,
         );
         if (isExists) {
           toast.error(`Kota sudah ada`);
           return;
         }
       }
-      const { data } = await addCity(provinceId, capitalizeCity, accessToken);
-
+      await addCity(provinceId, capitalizeCity, accessToken);
       setNewCity("");
-      toast.success("Kota berhasil ditambahkan", {
-        onClose: () => {
-          window.location.reload();
-        },
-      });
+      setIsAddCity(false);
+      await mutateCities();
+      toast.success("Kota berhasil ditambahkan");
     } catch (err) {
       console.log({ err });
       toast.error(`Gagal menambahkan Kota: ${err.message}`);
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
+    if (isAddCity) {
+      const el = document.querySelector("#addCityProvince");
+      if (el) {
+        HSSelect.getInstance(el)?.destroy();
+      }
+    }
     HSStaticMethods.autoInit();
-  }, [isAddCity, institutionProvince.value]);
+  }, [isAddCity, isAddProvince, institutionProvince.value]);
+
+  useEffect(() => {
+    document.querySelectorAll("#institutionProvince, #addCityProvince").forEach((el) => {
+      HSSelect.getInstance(el)?.destroy();
+    });
+    HSStaticMethods.autoInit();
+  }, [provinces]);
 
   useEffect(() => {
     const citySelectElement = document.querySelector("#institutionCity");
 
     if (citySelectElement) {
       HSSelect.getInstance(citySelectElement).destroy();
-
       HSStaticMethods.autoInit();
     }
   }, [cities]);
+
   if (!provinces) return <div>Loading...</div>;
-  if (!cities) return <div>Loading...</div>;
   if (!institutions) return <div>Loading...</div>;
 
   return (
@@ -227,14 +225,15 @@ const Users = () => {
       >
         <div>
           <label
-            htmlFor="institutionProvince"
+            htmlFor="addCityProvince"
             className="block text-sm font-medium mb-2 dark:text-white"
           >
             Pilih Provinsi
           </label>
           <select
-            id="institutionProvince"
-            name="institutionProvince"
+            id="addCityProvince"
+            name="addCityProvince"
+            value={selectedProvinceId || ""}
             onChange={(event) =>
               setSelectedProvinceId(Number(event.target.value))
             }
@@ -258,17 +257,17 @@ const Users = () => {
             ))}
           </select>
         </div>
-        <div class="">
+        <div className="">
           <label
-            for="input-city"
-            class="block text-sm font-medium mb-2 dark:text-white"
+            htmlFor="input-city"
+            className="block text-sm font-medium mb-2 dark:text-white"
           >
             Nama Kota
           </label>
           <input
             type="text"
             id="input-city"
-            class="py-2.5 sm:py-3 px-4 block border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600 w-full "
+            className="py-2.5 sm:py-3 px-4 block border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600 w-full "
             placeholder="Bandung"
             value={newCity}
             onChange={(e) => setNewCity(e.target.value)}
@@ -393,7 +392,7 @@ const Users = () => {
                     </div>
                     <button
                       type="button"
-                      class="px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+                      className="px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
                       onClick={() => setIsAddProvince(true)}
                     >
                       <FaPlus />
@@ -434,7 +433,6 @@ const Users = () => {
                       >
                         <option value="">Pilih Kota</option>
                         {cities.map((c) => {
-                          console.log({ c });
                           return (
                             <option key={c.id} value={c.id}>
                               {c.name}
@@ -445,8 +443,11 @@ const Users = () => {
                     </div>
                     <button
                       type="button"
-                      class="px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-                      onClick={() => setIsAddCity(true)}
+                      className="px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+                      onClick={() => {
+                        setSelectedProvinceId(Number(institutionProvince.value) || null);
+                        setIsAddCity(true)
+                      }}
                     >
                       <FaPlus />
                     </button>

@@ -3,7 +3,7 @@ import useSWR from "swr";
 import { useAuth } from "../../../hooks/auth/useAuth";
 import { token } from "../../../lib/auth/authAPI";
 import { jwtDecode } from "jwt-decode";
-import { getSchoolDashboardSummary } from "../../../lib/school/dashboardApi";
+import { getSchoolDashboardSummary } from "../../../lib/school/dashboardAPI";
 import WelcomeHero from "../../../components/dashboard/WelcomeHero";
 import DoughnutChartComponent from "../../../components/dashboard/parent/chart/DoughnutChartComponent";
 import BarChartComponent from "../../../components/dashboard/parent/chart/BarChartComponent";

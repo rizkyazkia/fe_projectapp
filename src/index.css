@@ -2,7 +2,8 @@
 
 @import "tailwindcss";
 @import "../node_modules/preline/variants.css";
-@import "../src/calendar.css";
+@source "../node_modules/preline/dist/*.js";
+@import "./calendar.css";
 @plugin "@tailwindcss/forms";
 
 @custom-variant dark

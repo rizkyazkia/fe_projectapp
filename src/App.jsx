@@ -1,10 +1,16 @@
-import { Routes } from "react-router-dom";
+import { useEffect } from "react";
+import { Routes, useLocation } from "react-router-dom";
 import mainRoute from "./routes/mainRoute";
 import dashboardRoute from "./routes/dashboardRoute/indexRoute";
 import authRoute from "./routes/authRoute";
-import { useAuth } from "./hooks/auth/useAuth";
 
 function App() {
+  const location = useLocation();
+
+  useEffect(() => {
+    window.HSStaticMethods?.autoInit();
+  }, [location.pathname]);
+
   return (
     <Routes>
       {mainRoute()}

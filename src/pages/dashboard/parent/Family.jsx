@@ -433,9 +433,10 @@ const Family = () => {
     if (isComplete || currentIndex === 0) return;
     if (jobData) {
       HSStaticMethods.autoInit();
+      window.HSDatepicker?.autoInit();
 
       if (dateInputRef.current) {
-        const instance = HSDatepicker.getInstance(dateInputRef.current, true);
+        const instance = window.HSDatepicker.getInstance(dateInputRef.current, true);
         if (instance && instance.element) {
           instance.element.on("change", (date) => {
             const selectedDate = date.selectedDates[0];
@@ -450,9 +451,10 @@ const Family = () => {
     if (isComplete || currentIndex === 0) return;
     if (institutionData || classData) {
       HSStaticMethods.autoInit();
+      window.HSDatepicker?.autoInit();
 
       if (dateInputRef.current) {
-        const instance = HSDatepicker.getInstance(dateInputRef.current, true);
+        const instance = window.HSDatepicker.getInstance(dateInputRef.current, true);
         if (instance && instance.element) {
           instance.element.on("change", (date) => {
             const selectedDate = date.selectedDates[0];

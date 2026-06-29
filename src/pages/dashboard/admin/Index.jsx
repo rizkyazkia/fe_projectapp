@@ -3,7 +3,7 @@ import useSWR from "swr";
 import { useAuth } from "../../../hooks/auth/useAuth";
 import { token } from "../../../lib/auth/authAPI";
 import { jwtDecode } from "jwt-decode";
-import { getAdminDashboardSummary } from "../../../lib/admin/dashboardApi";
+import { getAdminDashboardSummary } from "../../../lib/admin/dashboardAPI";
 import ProgressCircle from "../../../components/dashboard/parent/chart/ProgressCircle";
 import DoughnutChartComponent from "../../../components/dashboard/parent/chart/DoughnutChartComponent";
 

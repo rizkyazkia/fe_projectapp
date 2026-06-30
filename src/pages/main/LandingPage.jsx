@@ -18,10 +18,14 @@ import Step from "../../components/main/Step";
 import Testimonial from "../../components/main/Testimonial";
 import CTAaction from "../../components/main/CTAaction";
 import FooterMain from "../../components/main/FooterMain";
+import GameSection from "../../components/game/gamesection";
+
+
 
 export default function LandingPage() {
   return (
     <div className="bg-surface min-h-screen text-on-surface flex flex-col">
+
       {/* 1. HEADER / NAVIGATION */}
       <HeaderMain />
 
@@ -31,29 +35,30 @@ export default function LandingPage() {
       {/* 3. INTERACTIVE MODULE SECTION */}
       <InteractiveModule />
 
-      {/* 3. MINI CALCULATOR (INTERACTIVE CTA ON LANDING) */}
+      {/* 3. MINI CALCULATOR */}
       <IMTCalculator />
 
-      {/* 4. COLLABORATION PILLARS (ABOUT SECTION) */}
+      {/* 4. ABOUT */}
       <About />
 
-      {/* 5. FEATURES BENTO SECTION */}
+      {/* 5. FEATURES */}
       <Features />
 
-      {/* 6. STATISTICS STRIP */}
+      {/* 6. BANNER */}
       <Banner />
 
-      {/* 7. THREE EASY STEPS */}
+      {/* 7. STEP */}
       <Step />
 
-      {/* 8. TESTIMONIALS SECTION */}
+      {/* 8. TESTIMONIAL */}
       <Testimonial />
 
-      {/* 9. CALL TO ACTION (CTA) SECTION */}
+      {/* 9. CTA */}
       <CTAaction />
 
       {/* 10. FOOTER */}
       <FooterMain />
+
     </div>
   );
 }

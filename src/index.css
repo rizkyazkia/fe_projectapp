@@ -1,0 +1,289 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+@import "tailwindcss";
+@import "../node_modules/preline/variants.css";
+@source "../node_modules/preline/dist/*.js";
+@import "./calendar.css";
+@plugin "@tailwindcss/forms";
+
+@custom-variant dark
+  (&: where(.dark, .dark *));
+
+@theme {
+  --color-obito-black: #0a0723;
+  --color-obito-green: #2f6a62;
+  --color-obito-grey: #eaecee;
+  --color-obito-text-grey: #87898c;
+  --color-obito-light-green: #e0eae8;
+  --color-obito-light-red: #ffe3e1;
+  --color-obito-text-secondary: #6a6f7c;
+  --color-obito-background: #f8faf9;
+  --color-surface: #faf8ff;
+  --color-surface-dim: #d5d9eb;
+  --color-surface-bright: #faf8ff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f1f3ff;
+  --color-surface-container: #e9edff;
+  --color-surface-container-high: #e4e8f9;
+  --color-surface-container-highest: #dee2f3;
+  --color-on-surface: #161b28;
+  --color-on-surface-variant: #444655;
+  --color-inverse-surface: #2b303d;
+  --color-inverse-on-surface: #edf0ff;
+  --color-outline: #747686;
+  --color-outline-variant: #c4c5d7;
+  --color-surface-tint: #294fdb;
+  --color-primary: #264dd9;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #4568f3;
+  --color-on-primary-container: #fffbff;
+  --color-inverse-primary: #b8c3ff;
+  --color-secondary: #835400;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #fdb242;
+  --color-on-secondary-container: #6e4600;
+  --color-tertiary: #006947;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #00855b;
+  --color-on-tertiary-container: #f5fff6;
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+
+  --font-sans: Poppins, sans-serif;
+
+  /* Landing Page Start */
+  /* Screens */
+  --breakpoint-xs: 450px;
+  --breakpoint-sm: 575px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+  --breakpoint-2xl: 1400px;
+
+  /* Colors */
+  --color-main-black: #121723;
+  --color-main-dark: #1d2430;
+  --color-main-primary: #4a6cf7;
+  --color-main-yellow: #fbb040;
+  --color-main-body-color: #788293;
+  --color-main-body-color-dark: #959cb1;
+  --color-main-gray-dark: #1e232e;
+  --color-main-gray-light: #f0f2f9;
+  --color-main-stroke: #e3e8ef;
+  --color-main-stroke-dark: #353943;
+  --color-main-bg-color-dark: #171c28;
+
+  /* Box Shadows */
+  --shadow-main-signUp: 0px 5px 10px rgba(4, 10, 34, 0.2);
+  --shadow-main-one: 0px 2px 3px rgba(7, 7, 77, 0.05);
+  --shadow-main-two: 0px 5px 10px rgba(6, 8, 15, 0.1);
+  --shadow-main-three: 0px 5px 15px rgba(6, 8, 15, 0.05);
+  --shadow-main-sticky: inset 0 -1px 0 0 rgba(0, 0, 0, 0.1);
+  --shadow-main-sticky-dark: inset 0 -1px 0 0 rgba(255, 255, 255, 0.1);
+  --shadow-main-feature-2: 0px 10px 40px rgba(48, 86, 211, 0.12);
+  --shadow-main-submit: 0px 5px 20px rgba(4, 10, 34, 0.1);
+  --shadow-main-submit-dark: 0px 5px 20px rgba(4, 10, 34, 0.1);
+  --shadow-main-btn: 0px 1px 2px rgba(4, 10, 34, 0.15);
+  --shadow-main-btn-hover: 0px 1px 2px rgba(0, 0, 0, 0.15);
+  --shadow-main-btn-light: 0px 1px 2px rgba(0, 0, 0, 0.1);
+
+  /* Drop Shadow */
+  --drop-shadow-main-three: 0px 5px 15px rgba(6, 8, 15, 0.05);
+
+  /* Landing Page End */
+}
+
+@layer base {
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+@layer theme {
+  body {
+    background-color: #f8faf9;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-outline-variant);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-outline);
+}
+
+/* Landing Page Animations */
+@keyframes blob {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+@keyframes bounce-slow {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 4s infinite ease-in-out;
+}
+
+.animate-bounce-slow-delayed {
+  animation: bounce-slow 4.5s infinite ease-in-out 1s;
+}
+
+.ProseMirror:focus {
+  outline: none;
+}
+
+.tiptap ul p,
+.tiptap ol p {
+  display: inline;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.tiptap :first-child {
+  margin-top: 0;
+}
+
+/* List styles */
+.tiptap ul,
+.tiptap ol {
+  padding: 0 1rem;
+  margin: 1.25rem 1rem 1.25rem 0.4rem;
+}
+
+.tiptap ul {
+  list-style: disc;
+}
+
+.tiptap ol {
+  list-style: decimal;
+}
+
+.tiptap ul li p,
+.tiptap ol li p {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+}
+
+/* Heading styles */
+.tiptap h1,
+.tiptap h2,
+.tiptap h3,
+.tiptap h4,
+.tiptap h5,
+.tiptap h6 {
+  line-height: 1.1;
+  margin-top: 2.5rem;
+  text-wrap: pretty;
+  font-weight: bold;
+}
+
+.tiptap h1,
+.tiptap h2 {
+  margin-top: 3.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.tiptap h1 {
+  font-size: 1.6rem;
+}
+
+.tiptap h2 {
+  font-size: 1.4rem;
+}
+
+.tiptap h3 {
+  font-size: 1.2rem;
+}
+
+.tiptap h4,
+.tiptap h5,
+.tiptap h6 {
+  font-size: 1rem;
+}
+
+/* Code and preformatted text styles */
+.tiptap code {
+  background-color: var(--purple-light);
+  border-radius: 0.4rem;
+  color: var(--black);
+  font-size: 0.85rem;
+  padding: 0.25em 0.3em;
+}
+
+.tiptap pre {
+  background: var(--black);
+  border-radius: 0.5rem;
+  color: var(--white);
+  font-family: "JetBrainsMono", monospace;
+  margin: 1.5rem 0;
+  padding: 0.75rem 1rem;
+}
+
+.tiptap pre code {
+  background: none;
+  color: inherit;
+  font-size: 0.8rem;
+  padding: 0;
+}
+
+/* Blockquote and horizontal rule */
+.tiptap blockquote {
+  border-left: 3px solid var(--gray-3);
+  margin: 1.5rem 0;
+  padding-left: 1rem;
+}
+
+.tiptap hr {
+  border: none;
+  border-top: 1px solid var(--gray-2);
+  margin: 2rem 0;
+}

@@ -3,7 +3,7 @@ import api from "../api";
 export const getSchoolDashboardSummary = async (accessToken) => {
   try {
     const response = await api.get(
-      `${import.meta.env.VITE_BASE_URL}statistics/school/dashboard/summary`,
+      `statistics/school/dashboard/summary`,
       {
         headers: { Authorization: `Bearer ${accessToken}` },
       }

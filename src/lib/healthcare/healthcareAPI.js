@@ -3,7 +3,7 @@ import api from "../api";
 export const getHealthCares = async (search = "") => {
   try {
     const response = await api.get(
-      `${import.meta.env.VITE_BASE_URL}institutions/healthcares`,
+      `institutions/healthcares`,
       { params: { search } }
     );
     return response.data;

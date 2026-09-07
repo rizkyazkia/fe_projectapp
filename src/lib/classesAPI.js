@@ -74,7 +74,7 @@ export const dropClasses = async (id, token) => {
 export const getAllClass = async (schoolId) => {
   try {
     const response = await api.get(
-      `${import.meta.env.VITE_BASE_URL}classes/institution/${schoolId}`
+      `classes/institution/${schoolId}`
     );
     return response.data;
   } catch (error) {

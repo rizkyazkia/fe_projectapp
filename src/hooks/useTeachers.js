@@ -25,7 +25,7 @@ export const useTeachers = () => {
         pending: "Loading...",
         success: {
           render(response) {
-            return response.message;
+            return response.data.message;
           },
           onClose: () => {
             HSOverlay.close("#modal-add-teachers");
@@ -34,7 +34,7 @@ export const useTeachers = () => {
         },
         error: {
           render(response) {
-            return response.message;
+            return response.data.message;
           },
           onClose: () => {
             HSOverlay.close("#modal-add-teachers");
@@ -55,7 +55,7 @@ export const useTeachers = () => {
         pending: "Loading...",
         success: {
           render(response) {
-            return response.message;
+            return response.data.message;
           },
           onClose: () => {
             HSOverlay.close("#modal-add-teachers");
@@ -64,7 +64,7 @@ export const useTeachers = () => {
         },
         error: {
           render(response) {
-            return response.message;
+            return response.data.message;
           },
           onClose: () => {
             HSOverlay.close("#modal-add-teachers");
@@ -85,7 +85,7 @@ export const useTeachers = () => {
         pending: "Loading...",
         success: {
           render(response) {
-            return response.message;
+            return response.data.message;
           },
           onClose: () => {
             HSOverlay.close("#modal-add-teachers");
@@ -94,7 +94,7 @@ export const useTeachers = () => {
         },
         error: {
           render(response) {
-            return response.message;
+            return response.data.message;
           },
           onClose: () => {
             HSOverlay.close("#modal-add-teachers");

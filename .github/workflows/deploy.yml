@@ -97,6 +97,44 @@ jobs:
             **/.git*
             **/.git*/**
 
+      - name: Sync FTP upload into live directory
+        env:
+          SSH_HOST: ${{ secrets.RUMAHWEB_SSH_HOST }}
+          SSH_USER: ${{ secrets.RUMAHWEB_SSH_USER }}
+          SSH_PORT: ${{ secrets.RUMAHWEB_SSH_PORT }}
+          DOMAIN: ${{ secrets.RUMAHWEB_FE_PATH }}
+        run: |
+          set -e
+          # The ftp_jalinananaksehat FTP account used by "Deploy via FTP" is
+          # jailed to public_html/<domain>/ftp_jalinananaksehat/ - a
+          # different directory tree than the live app root ($HOME/<domain>/,
+          # where the Node app in server.js actually runs from, matching the
+          # $HOME/$DOMAIN pattern the next step already relies on). FTP
+          # jails can't be pointed outside their own root, so every FTP
+          # upload lands in the jail and has to be mirrored server-side into
+          # the live directory over SSH before it's actually live.
+          mkdir -p ~/.ssh
+          echo "${{ secrets.RUMAHWEB_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+          cat > sync.sh <<'SCRIPT'
+          #!/bin/bash
+          set -e
+          DOMAIN="$1"
+          SRC="$HOME/public_html/$DOMAIN/ftp_jalinananaksehat/$DOMAIN"
+          DEST="$HOME/$DOMAIN"
+          for item in dist server.js package.json package-lock.json node_modules tmp; do
+            rm -rf "${DEST:?}/$item"
+            cp -r "$SRC/$item" "$DEST/$item"
+          done
+          SCRIPT
+
+          scp -i ~/.ssh/deploy_key -P "$SSH_PORT" -o StrictHostKeyChecking=yes \
+            sync.sh "$SSH_USER@$SSH_HOST:~/sync-fe.sh"
+          ssh -i ~/.ssh/deploy_key -p "$SSH_PORT" -o StrictHostKeyChecking=yes \
+            "$SSH_USER@$SSH_HOST" "bash ~/sync-fe.sh '$DOMAIN'; rm -f ~/sync-fe.sh"
+
       - name: Recycle stale Node worker
         continue-on-error: true
         env:

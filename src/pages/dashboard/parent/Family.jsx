@@ -3,7 +3,12 @@ import React, { useState } from "react";
 import { FaChild, FaChildDress, FaChildReaching } from "react-icons/fa6";
 import { getJobTypes } from "../../../lib/jobAPI";
 import useSWR from "swr";
-import { HSDatepicker, HSSelect, HSStaticMethods } from "preline/preline";
+import {
+  HSDatepicker,
+  HSSelect,
+  HSStaticMethods,
+  HSStepper,
+} from "preline/preline";
 import {
   createFamilyMember,
   getFamilyMember,
@@ -1901,6 +1906,18 @@ const Family = () => {
                       );
                       return;
                     }
+                    // Preline's own click handler never runs (blocked
+                    // above), so its internal step tracking - which drives
+                    // the hs-stepper-active/success breadcrumb classes at
+                    // the top - has to be advanced manually here instead,
+                    // or the breadcrumb stays stuck highlighting the step
+                    // we just left.
+                    const stepperEl = e.currentTarget.closest(
+                      "[data-hs-stepper]",
+                    );
+                    const stepperInstance =
+                      stepperEl && HSStepper.getInstance(stepperEl, true);
+                    stepperInstance?.element?.goToNext();
                     handleSubmit();
                   }}
                 >

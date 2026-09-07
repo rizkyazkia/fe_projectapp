@@ -270,6 +270,39 @@ const Family = () => {
     return [];
   };
 
+  const validateCurrentStep = () => {
+    // Scoped by DOM containment (the current step's
+    // data-hs-stepper-content-item wrapper) rather than a hand-maintained
+    // list of Formik field names, so it stays correct regardless of how a
+    // field's `name`/`id` happens to be spelled - including Preline's
+    // hidden <select> elements, whose value is kept in sync with Formik
+    // state even though the element itself is visually hidden in favor of
+    // a custom-rendered dropdown UI.
+    const containers = document.querySelectorAll(
+      "[data-hs-stepper-content-item]",
+    );
+    let activeContainer = null;
+    for (const el of containers) {
+      try {
+        const { index } = JSON.parse(
+          el.getAttribute("data-hs-stepper-content-item"),
+        );
+        if (index === currentIndex) {
+          activeContainer = el;
+          break;
+        }
+      } catch {
+        // ignore malformed attribute
+      }
+    }
+    if (!activeContainer) return true;
+
+    const requiredFields = activeContainer.querySelectorAll("[required]");
+    return Array.from(requiredFields).every(
+      (field) => String(field.value ?? "").trim() !== "",
+    );
+  };
+
   const fixLabelPosition = (selectEl) => {
     const label = selectEl.parentElement.querySelector(
       `label[for="${selectEl.id}"]`,
@@ -476,6 +509,10 @@ const Family = () => {
           instance.element.on("change", (date) => {
             const selectedDate = date.selectedDates[0];
             setFieldValue("birthDate", selectedDate);
+            // The calendar popup doesn't close itself on selection (no
+            // public close/hide API on HSDatepicker), so reach into the
+            // underlying vanilla-calendar-pro instance it wraps.
+            instance.element.vanillaCalendar?.hide();
           });
         }
       }
@@ -494,6 +531,10 @@ const Family = () => {
           instance.element.on("change", (date) => {
             const selectedDate = date.selectedDates[0];
             setFieldValue("birthDate", selectedDate);
+            // The calendar popup doesn't close itself on selection (no
+            // public close/hide API on HSDatepicker), so reach into the
+            // underlying vanilla-calendar-pro instance it wraps.
+            instance.element.vanillaCalendar?.hide();
           });
         }
       }
@@ -1842,7 +1883,26 @@ const Family = () => {
                   type="button"
                   className="py-2 px-3 inline-flex items-center gap-x-1 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
                   data-hs-stepper-next-btn=""
-                  onClick={handleSubmit}
+                  onClickCapture={(e) => {
+                    // Preline's own HSStepper plugin binds a native click
+                    // listener directly to this button (recognizing
+                    // data-hs-stepper-next-btn) that advances the visible
+                    // step on its own, entirely independent of React state -
+                    // it always wins the race against a normal onClick
+                    // handler since it's attached closer to the target and
+                    // fires first. Intercepting in the capture phase and
+                    // killing further propagation is the only reliable way
+                    // to stop it before it can visually advance past a step
+                    // that hasn't actually been validated.
+                    e.nativeEvent.stopImmediatePropagation();
+                    if (!validateCurrentStep()) {
+                      toast.error(
+                        "Mohon lengkapi semua field yang wajib diisi sebelum lanjut ke langkah berikutnya.",
+                      );
+                      return;
+                    }
+                    handleSubmit();
+                  }}
                 >
                   Next
                   <svg
@@ -1866,6 +1926,12 @@ const Family = () => {
                   type="button"
                   className="py-2 px-3 inline-flex items-center gap-x-1 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
                   onClick={async () => {
+                    if (!validateCurrentStep()) {
+                      toast.error(
+                        "Mohon lengkapi semua field yang wajib diisi sebelum submit.",
+                      );
+                      return;
+                    }
                     const response = await token();
                     const freshToken = response?.data?.accessToken;
                     setAccessToken(freshToken);

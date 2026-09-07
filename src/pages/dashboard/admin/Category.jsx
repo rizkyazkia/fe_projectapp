@@ -8,16 +8,11 @@ const TABLE_HEAD = ["No", "Kategori"];
 const Category = () => {
   const [page, setPage] = React.useState(0);
   const [limit, setLimit] = React.useState(10);
-  const [pages, setPages] = React.useState(0);
-  const [rows, setRows] = React.useState(0);
   const [keyword, setKeyword] = React.useState("");
   const [query, setQuery] = React.useState("");
 
   const category = async () => {
     const response = await getCategories(keyword, page, limit);
-    setPage(response.data.page);
-    setPages(response.data.totalPage);
-    setRows(response.data.totalRows);
     return response.data;
   };
 
@@ -25,16 +20,14 @@ const Category = () => {
     ["categories", keyword, page],
     () => category()
   );
+  const pages = data?.totalPage ?? 0;
+  const rows = data?.totalRows ?? 0;
 
   const searchData = (e) => {
     e.preventDefault();
     setPage(0);
     setKeyword(query);
   };
-
-  React.useEffect(() => {
-    mutate();
-  }, [keyword, page, mutate]);
 
   return (
     <div>

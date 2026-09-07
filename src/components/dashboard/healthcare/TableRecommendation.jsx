@@ -23,8 +23,6 @@ const TABLE_HEAD = [
 const TableRecommendation = () => {
   const [page, setPage] = React.useState(0);
   const [limit, setLimit] = React.useState(10);
-  const [pages, setPages] = React.useState(0);
-  const [rows, setRows] = React.useState(0);
   const [keyword, setKeyword] = React.useState("");
   const [query, setQuery] = React.useState("");
   const [selectedRec, setSelectedRec] = React.useState(null);
@@ -47,9 +45,6 @@ const TableRecommendation = () => {
   const Fetchrecomend = async () => {
     const t = await getActiveToken();
     const response = await getRecommendations(t);
-    setPage(response.data.page);
-    setPages(response.data.totalPage);
-    setRows(response.data.totalRows);
     return response.data;
   };
 
@@ -58,6 +53,8 @@ const TableRecommendation = () => {
     isLoading: recommendationLoading,
     mutate: recommendationMutate,
   } = useSWR(["recommendations", keyword, page], () => Fetchrecomend());
+  const pages = recommendationData?.totalPage ?? 0;
+  const rows = recommendationData?.totalRows ?? 0;
 
   const filteredRecomend = recommendationData?.recomend?.filter(
     (rec) => rec.status === "PENDING" || rec.status === "PROCESSED",

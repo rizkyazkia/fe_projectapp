@@ -28,8 +28,6 @@ const TableStudents = () => {
 
   const [page, setPage] = React.useState(0);
   const [limit, setLimit] = React.useState(10);
-  const [pages, setPages] = React.useState(0);
-  const [rows, setRows] = React.useState(0);
   const [keyword, setKeyword] = React.useState("");
   const [query, setQuery] = React.useState("");
   const [selectedClass, setSelectedClass] = React.useState("Semua Kelas");
@@ -70,9 +68,6 @@ const TableStudents = () => {
       limit,
       classFilter,
     );
-    setPage(response.data.page);
-    setPages(response.data.totalPage);
-    setRows(response.data.totalRows);
     return response.data;
   };
 
@@ -87,6 +82,8 @@ const TableStudents = () => {
     isLoading: studentLoading,
     mutate: studentMutate,
   } = useSWR(["students", keyword, page, selectedClass], () => Fetchstudents());
+  const pages = studentData?.totalPage ?? 0;
+  const rows = studentData?.totalRows ?? 0;
 
   const { data: classesData, isLoading: classesLoading } = useSWR(
     "classes",

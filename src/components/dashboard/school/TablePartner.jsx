@@ -18,8 +18,6 @@ const TablePartner = ({ children, handleDelete, setDataPartner }) => {
 
   const [page, setPage] = React.useState(0);
   const [limit, setLimit] = React.useState(10);
-  const [pages, setPages] = React.useState(0);
-  const [rows, setRows] = React.useState(0);
   const [keyword, setKeyword] = React.useState("");
   const [query, setQuery] = React.useState("");
 
@@ -38,9 +36,6 @@ const TablePartner = ({ children, handleDelete, setDataPartner }) => {
   const fetchPartners = async () => {
     const activeToken = await getActiveToken();
     const response = await getPartners(keyword, page, limit, activeToken);
-    setPage(response.data.page);
-    setPages(response.data.totalPage);
-    setRows(response.data.totalRows);
     setDataPartner(response.data.partnerships);
     return response.data;
   };
@@ -49,6 +44,8 @@ const TablePartner = ({ children, handleDelete, setDataPartner }) => {
     ["partners", keyword, page],
     () => fetchPartners()
   );
+  const pages = data?.totalPage ?? 0;
+  const rows = data?.totalRows ?? 0;
 
   let tableContent;
 
@@ -119,10 +116,6 @@ const TablePartner = ({ children, handleDelete, setDataPartner }) => {
     mutate();
   };
 
-  React.useEffect(() => {
-    mutate();
-  }, [keyword, page, mutate]);
-
   return (
     <div className="flex flex-col">
       <div className="-m-1.5 overflow-x-auto">
@@ -185,7 +178,6 @@ const TablePartner = ({ children, handleDelete, setDataPartner }) => {
                   className="hs-overlay [--overlay-backdrop:static] hidden size-full fixed top-0 start-0 z-100 overflow-x-hidden overflow-y-auto pointer-events-none bg-gray-900/50"
                   tabIndex="-1"
                   aria-labelledby="modal-add-partners-label"
-                  data-hs-overlay-keyboard="false"
                 >
                   <div className="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg lg:max-w-2xl sm:w-full m-3 sm:mx-auto min-h-[calc(100%-56px)] flex items-center">
                     <div className="flex flex-col bg-white border border-obito-grey shadow-2xs rounded-xl pointer-events-auto lg:w-lg">

@@ -14,23 +14,20 @@ const TableClasses = ({ children, handleDelete, handleEdit }) => {
 
   const [page, setPage] = React.useState(0);
   const [limit, setLimit] = React.useState(10);
-  const [pages, setPages] = React.useState(0);
-  const [rows, setRows] = React.useState(0);
   const [keyword, setKeyword] = React.useState("");
   const [query, setQuery] = React.useState("");
   const { accessToken } = useAuth();
 
   const classes = async () => {
     const response = await getClasses(accessToken, keyword, page, limit);
-    setPage(response.data.page);
-    setPages(response.data.totalPage);
-    setRows(response.data.totalRows);
     return response.data;
   };
 
   const { data, isLoading, mutate } = useSWR(["classes", keyword, page], () =>
     classes()
   );
+  const pages = data?.totalPage ?? 0;
+  const rows = data?.totalRows ?? 0;
 
   let tableContent;
 
@@ -95,10 +92,6 @@ const TableClasses = ({ children, handleDelete, handleEdit }) => {
     setKeyword(query);
     mutate();
   };
-
-  React.useEffect(() => {
-    mutate();
-  }, [keyword, page, mutate]);
 
   return (
     <div className="flex flex-col">

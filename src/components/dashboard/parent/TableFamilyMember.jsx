@@ -26,8 +26,6 @@ const TableFamilyMember = ({ institutionData, classData }) => {
 
   const [page, setPage] = React.useState(0);
   const [limit, setLimit] = React.useState(10);
-  const [pages, setPages] = React.useState(0);
-  const [rows, setRows] = React.useState(0);
   const [keyword, setKeyword] = React.useState("");
   const [query, setQuery] = React.useState("");
 
@@ -49,9 +47,6 @@ const TableFamilyMember = ({ institutionData, classData }) => {
   const Fetchfamilymember = async () => {
     const activeToken = await getActiveToken();
     const response = await getFamilyMember(activeToken, keyword, page, limit);
-    setPage(response.data.page);
-    setPages(response.data.totalPage);
-    setRows(response.data.totalRows);
     return response.data;
   };
 
@@ -59,6 +54,8 @@ const TableFamilyMember = ({ institutionData, classData }) => {
     ["familyMembers", keyword, page],
     () => Fetchfamilymember(),
   );
+  const pages = data?.totalPage ?? 0;
+  const rows = data?.totalRows ?? 0;
 
   React.useEffect(() => {
     if (data) {
@@ -72,10 +69,6 @@ const TableFamilyMember = ({ institutionData, classData }) => {
     setKeyword(query);
     mutate("familyMembers", { revalidate: true });
   };
-
-  React.useEffect(() => {
-    mutate();
-  }, [keyword, page, mutate]);
 
   const [editUser, setEditUser] = React.useState(false);
   const [selectedEdit, setSelectedEdit] = React.useState(null);

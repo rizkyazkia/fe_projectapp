@@ -27,8 +27,6 @@ const Table = ({ children }) => {
 
   const [page, setPage] = React.useState(0);
   const [limit, setLimit] = React.useState(10);
-  const [pages, setPages] = React.useState(0);
-  const [rows, setRows] = React.useState(0);
   const [keyword, setKeyword] = React.useState("");
   const [query, setQuery] = React.useState("");
 
@@ -50,15 +48,14 @@ const Table = ({ children }) => {
   const Fetchuser = async () => {
     const activeToken = await getActiveToken();
     const response = await getAllUsers(activeToken, keyword, page, limit);
-    setPage(response.data.page);
-    setPages(response.data.totalPage);
-    setRows(response.data.totalRows);
     return response.data;
   };
 
   const { data, isLoading, mutate } = useSWR(["users", keyword, page], () =>
     Fetchuser()
   );
+  const pages = data?.totalPage ?? 0;
+  const rows = data?.totalRows ?? 0;
 
   const searchData = (e) => {
     e.preventDefault();
@@ -66,10 +63,6 @@ const Table = ({ children }) => {
     setKeyword(query);
     mutate("users", { revalidate: true });
   };
-
-  React.useEffect(() => {
-    mutate();
-  }, [keyword, page, mutate]);
 
   if (isLoading) {
     tableContent = [...Array(10)].map((_, index) => (

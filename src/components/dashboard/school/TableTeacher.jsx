@@ -30,8 +30,6 @@ const TableTeacher = ({
 
   const [page, setPage] = React.useState(0);
   const [limit, setLimit] = React.useState(10);
-  const [pages, setPages] = React.useState(0);
-  const [rows, setRows] = React.useState(0);
   const [keyword, setKeyword] = React.useState("");
   const [query, setQuery] = React.useState("");
 
@@ -51,9 +49,6 @@ const TableTeacher = ({
   const teachers = async () => {
     const activeToken = await getActiveToken();
     const response = await getTeachers(keyword, page, limit, activeToken);
-    setPage(response.data.page);
-    setPages(response.data.totalPage);
-    setRows(response.data.totalRows);
     setDataTeacher(response.data.teachers);
     return response.data;
   };
@@ -61,6 +56,8 @@ const TableTeacher = ({
   const { data, isLoading, mutate } = useSWR(["teachers", keyword, page], () =>
     teachers()
   );
+  const pages = data?.totalPage ?? 0;
+  const rows = data?.totalRows ?? 0;
 
   let tableContent;
 
@@ -129,10 +126,6 @@ const TableTeacher = ({
     setKeyword(query);
     mutate();
   };
-
-  React.useEffect(() => {
-    mutate();
-  }, [keyword, page, mutate]);
 
   return (
     <div className="flex flex-col">

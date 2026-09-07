@@ -13,27 +13,20 @@ const TableQuestion = ({ id, children }) => {
 
   const [page, setPage] = React.useState(0);
   const [limit, setLimit] = React.useState(10);
-  const [pages, setPages] = React.useState(0);
-  const [rows, setRows] = React.useState(0);
   const [keyword, setKeyword] = React.useState("");
   const [query, setQuery] = React.useState("");
   const [existingData, setExistingData] = React.useState(null);
 
   const question = async () => {
     const response = await getQuestionsByQuesionerID(id, keyword, page, limit);
-    setPage(response.data.page);
-    setPages(response.data.totalPage);
-    setRows(response.data.totalRows);
     return response.data;
   };
 
   const { data, isLoading, mutate } = useSWR(["questions", keyword, page], () =>
     question()
   );
-
-  React.useEffect(() => {
-    mutate();
-  }, [keyword, page, mutate]);
+  const pages = data?.totalPage ?? 0;
+  const rows = data?.totalRows ?? 0;
 
   const searchData = (e) => {
     e.preventDefault();

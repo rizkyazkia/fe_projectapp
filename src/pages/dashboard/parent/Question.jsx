@@ -18,6 +18,7 @@ import {
   getResponseQuesioner,
   getResponseHistory,
 } from "../../../lib/parent/responseAPI";
+import { getFamilyMember } from "../../../lib/parent/familiesAPI";
 import {
   getQuesioners,
   getQuestionsByQuesionerIDWithoutPagination,
@@ -83,6 +84,28 @@ const Question = () => {
 
   const { data: quesioner } = useSWR("quesioners", quesioners);
 
+  // Shares the exact SWR cache key FamilyMemberGuard uses, so this is a
+  // cache hit (no extra request) once the guard has fetched it. Gates the
+  // three effects below so a brand-new account with no family data yet
+  // doesn't fire a checking/history/response request per quesioner that's
+  // guaranteed to fail - the guard already blocks this page with a modal
+  // telling the user to fill in family data first.
+  const fetchFamilyMembers = async () => {
+    try {
+      const activeToken = await getActiveToken();
+      const response = await getFamilyMember(activeToken, "", 0, 10);
+      return response.data;
+    } catch {
+      return { familyMembers: [] };
+    }
+  };
+  const { data: familyMemberData } = useSWR(
+    ["familyMembers", "", 0],
+    fetchFamilyMembers,
+  );
+  const hasFamilyMembers =
+    (familyMemberData?.familyMembers?.length ?? 0) > 0;
+
   const {
     data: question,
     isLoading: questionLoading,
@@ -144,7 +167,7 @@ const Question = () => {
   }, [selectedQuestion]);
 
   React.useEffect(() => {
-    if (quesioner && accessToken) {
+    if (quesioner && accessToken && hasFamilyMembers) {
       Promise.all(
         quesioner.map(async (q) => {
           try {
@@ -180,10 +203,10 @@ const Question = () => {
         setAnsweredStatus(statusObj);
       });
     }
-  }, [quesioner, accessToken, historyRefreshKey]);
+  }, [quesioner, accessToken, hasFamilyMembers, historyRefreshKey]);
 
   React.useEffect(() => {
-    if (quesioner && accessToken) {
+    if (quesioner && accessToken && hasFamilyMembers) {
       Promise.all(
         quesioner.map(async (q) => {
           const activeToken = await getActiveToken();
@@ -210,10 +233,18 @@ const Question = () => {
         setResponseQuesioner(responseObject);
       });
     }
-  }, [quesioner, accessToken, page, limit, keyword, historyRefreshKey]);
+  }, [
+    quesioner,
+    accessToken,
+    hasFamilyMembers,
+    page,
+    limit,
+    keyword,
+    historyRefreshKey,
+  ]);
 
   React.useEffect(() => {
-    if (quesioner && accessToken) {
+    if (quesioner && accessToken && hasFamilyMembers) {
       Promise.all(
         quesioner.map(async (q) => {
           try {
@@ -236,7 +267,7 @@ const Question = () => {
         setResponseHistory(obj);
       });
     }
-  }, [quesioner, accessToken, historyRefreshKey]);
+  }, [quesioner, accessToken, hasFamilyMembers, historyRefreshKey]);
 
   React.useEffect(() => {
     HSStaticMethods.autoInit();

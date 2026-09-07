@@ -11,10 +11,6 @@ import { useAuth } from "../../../hooks/auth/useAuth";
 import FormEditTeacher from "../../../components/dashboard/school/FormEditTeacher";
 
 const Teachers = () => {
-  React.useEffect(() => {
-    HSStaticMethods.autoInit();
-  }, []);
-
   const { addTeacher, deleteTeacher } = useTeachers();
   const { accessToken } = useAuth();
 
@@ -28,6 +24,18 @@ const Teachers = () => {
   };
 
   const { data } = useSWR("classes", classes);
+
+  // The "Kelas" <select data-hs-select> only exists in the DOM once `data`
+  // has loaded (the component renders a loading placeholder until then), so
+  // autoInit() has to re-run when `data` arrives - an empty dependency array
+  // would call it once against a DOM that doesn't have the select yet, and
+  // Preline never picks it up afterwards. Mirrors the pattern in Family.jsx.
+  React.useEffect(() => {
+    if (!data) return;
+    setTimeout(() => {
+      HSStaticMethods.autoInit();
+    }, 0);
+  }, [data]);
 
   const { handleChange, handleBlur, handleSubmit, setFieldValue } = useFormik({
     initialValues: {
